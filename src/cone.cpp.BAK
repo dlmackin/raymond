@@ -1,0 +1,79 @@
+/*
+ * cone.cpp
+ *
+ *   CS 488: Final Project
+ *   Fall 2011, University of Waterloo
+ *   Diana Mackinnon (dlmackin, 20280688)
+ */
+
+#include "cone.hpp"
+#include "global.hpp"
+
+Cone::Cone() {
+  // TODO Auto-generated constructor stub
+
+}
+
+Cone::~Cone() {
+  // TODO Auto-generated destructor stub
+}
+
+bool Cone::intersect(const Ray & ray, Intersection & intersection, bool quick) {
+  Intersection near, far;
+  double t_near = DOUBLE_MAX, t_far = 0;
+  double t[2];
+
+  double x_D = ray.D[0];
+  double y_D = ray.D[1];
+  double z_D = ray.D[2];
+  double x_O = ray.O[0];
+  double y_O = ray.O[1];
+  double z_O = ray.O[2];
+
+  double fac = (RADIUS * RADIUS) / (double)(HEIGHT * HEIGHT);
+
+  // cylinder part
+  double A = (x_D * x_D) + (z_D * z_D) - fac * (y_D * y_D);
+  double B = (2 * x_O * x_D) + (2 * z_O * z_D) - fac * (2 * y_O * y_D - 4 * y_D);
+  double C = (x_O * x_O) + (z_O * z_O) - fac * (y_O * y_O - (4 * y_O) + 4);
+
+  double d = (B * B) - (4 * A * C);
+
+  if (d >= 0) {
+    t[0] = (-B - sqrt(d)) / (2 * A);
+    t[1] = (-B + sqrt(d)) / (2 * A);
+    for (int i = 0; i < 2; i++) {
+      if (t[i] > EPSILON) { // So it doesn't cast shadows on itself
+        // find intersection
+        Intersection temp;
+        temp.P = ray.O + t[i] * ray.D;
+        if (temp.P[1] <= 2 && temp.P[1] >= 0) { // valid intersection point
+          temp.N[0] = 2 * temp.P[0] + temp.P[1];
+          temp.N[1] = (-0.25) * temp.P[2] + temp.P[0] + 1;
+          temp.N[2] = (-0.25) * temp.P[1];
+
+//          if (temp.N.dot(ray.D) > 0) {
+//            temp.N = -temp.N;
+//          }
+
+
+          if (t[i] > t_far) {
+            t_far = t[i];
+            far = temp;
+          }
+          if (t[i] < t_near) {
+            t_near = t[i];
+            near = temp;
+          }
+        }
+      }
+    }
+  }
+
+  if (t_near < DOUBLE_MAX) {
+    intersection = near;
+    return true;
+  } else {
+    return false;
+  }
+}
