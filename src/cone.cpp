@@ -64,10 +64,6 @@ bool Cone::intersect(const Ray & ray, Intersection & intersection, bool quick) {
           double a = 1, d = (-1 * RADIUS * RADIUS) / (double) (HEIGHT * HEIGHT), f = 1, h = (2
               * RADIUS * RADIUS) / HEIGHT;
 
-          //          temp.NORMAL[0] = (2 * a * temp.NEAR[0]) + (d * temp.NEAR[1]);
-          //          temp.NORMAL[1] = ((d * temp.NEAR[0]) + (f * temp.NEAR[2]) + h);
-          //          temp.NORMAL[2] = (f * temp.NEAR[1] * 0.5);
-
           double B = std::sqrt(2);
 
           double mag = std::sqrt(temp.NEAR[0] * temp.NEAR[0] + temp.NEAR[2] * temp.NEAR[2]);
@@ -77,17 +73,6 @@ bool Cone::intersect(const Ray & ray, Intersection & intersection, bool quick) {
           temp.NORMAL[0] = 1 / B * costheta;
           temp.NORMAL[1] = 1 / B;
           temp.NORMAL[2] = 1 / B * (1 - costheta);
-
-          //          temp.NORMAL[0] = 0.5 * temp.NEAR[0] / (double)((temp.NEAR - Point3D(0,temp.NEAR[1],0)).length());
-          //          temp.NORMAL[1] = 0.5;
-          //          temp.NORMAL[2] = 0.5 * std::sin(std::acos(temp.NEAR[0]));
-          //
-          //          temp.NORMAL[2] = 0.5 * temp.NEAR[2] / (double)((temp.NEAR - Point3D(0,temp.NEAR[1],0)).length());
-          //
-          //          temp.NORMAL = temp.NEAR - Point3D(0,temp.NEAR[1],0);
-          //
-          //          temp.NORMAL[1] = std::abs(temp.NORMAL[0]) + std::abs(temp.NORMAL[2]);
-          //          temp.NORMAL.normalize();
 
           if (t[i] > t_far) {
             t_far = t[i];
@@ -105,19 +90,6 @@ bool Cone::intersect(const Ray & ray, Intersection & intersection, bool quick) {
   }
 
   intersection.NORMAL.normalize();
-
-  //    intersection.NORMAL = - intersection.NORMAL;
-  //  intersection.NORMAL[0] = -intersection.NORMAL[0];
-  //  intersection.NORMAL[1] = -intersection.NORMAL[1];
-  //  intersection.NORMAL[2] = -intersection.NORMAL[2];
-
-//  if (t_near < DOUBLE_MAX) {
-//    if (cflag == 0 && intersection.NEAR[0] < -0.5) {
-//
-//      std::cerr << "pt: " << intersection.NEAR << " norm: " << intersection.NORMAL << std::endl;
-//      cflag++;
-//    }
-//  }
 
   // base
   Intersection temp;
@@ -143,3 +115,4 @@ bool Cone::intersect(const Ray & ray, Intersection & intersection, bool quick) {
     return false;
   }
 }
+

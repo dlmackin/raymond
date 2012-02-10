@@ -7,9 +7,10 @@
  */
 
 #include "primitive.hpp"
-
 #include "global.hpp"
 
+// TODO Split each primitive into its own file.
+// TODO Merge some of the Cube and NonHierBox methods (if possible)
 Primitive::~Primitive() {
 }
 
@@ -177,7 +178,8 @@ Point3D Cube::closest(Point3D origin, Point3D p0, Point3D p1) {
   return p1;
 }
 
-// TODO edge cases (literally. ha.)
+// TODO check how this works for corners/edges. It should be ok but maybe not
+// super consistent?
 Vector3D Cube::normal(Intersection& point) {
   Vector3D ret(0, 0, 0);
   
@@ -227,7 +229,7 @@ bool NonhierSphere::intersect(const Ray& ray, Intersection& intersection, bool q
   }
   intersection.NEAR = ray.O + t * ray.D;
   
-  // get normal too!
+  // get normal too
   normal(intersection);
   
   return true;
@@ -362,7 +364,7 @@ Point3D NonhierBox::closest(Point3D origin, Point3D p0, Point3D p1) {
   return p1;
 }
 
-// TODO edge cases (literally. ha.)
+// TODO check how this works for edges and corners.
 Vector3D NonhierBox::normal(Intersection& point) {
   Vector3D ret(0, 0, 0);
   

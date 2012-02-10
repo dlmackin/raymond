@@ -16,8 +16,8 @@ bool flag = false;
 PhongTexture::PhongTexture(const std::string& filename, const Colour& ks, double shininess,
     double reflection) :
   RMaterial(Colour(0), ks, shininess, reflection, 0, 0), filename(filename), success(false) {
-  load_texture_file();
-}
+    load_texture_file();
+  }
 
 PhongTexture::~PhongTexture() {
   // TODO Auto-generated destructor stub
@@ -47,7 +47,6 @@ Colour PhongTexture::get_texture_for_point(Point2D uv) {
     double x = u * image.width();
     double y = v * image.height();
 
-    //  std::cerr << "elements = " << image.elements() << std::endl;
     double r = image(x, y, 0);
     double g = image(x, y, 1);
     double b = image(x, y, 2);
@@ -62,14 +61,6 @@ Colour PhongTexture::get_texture_for_point(Point2D uv) {
     double v = uv[1] - int(uv[1]);
 
     double val = std::sin((double) (v * 2 * M_PI) * 10.0);
-
-//    if (val != val) {
-//      std::cerr << "..." << std::endl;
-//    }
-//    if (val == 0) {
-//      ret = Colour(1,0,0);
-//    }
-
 
     if (val < -EPSILON) {
       ret = Colour(1, 1, 1);

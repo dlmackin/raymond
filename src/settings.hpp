@@ -1,5 +1,5 @@
-#ifndef CS488_BLAH_HPP
-#define CS488_BLAH_HPP
+#ifndef CS488_SETTINGS_HPP
+#define CS488_SETTINGS_HPP
 
 struct Settings {
 

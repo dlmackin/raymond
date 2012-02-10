@@ -53,7 +53,6 @@ void SceneNode::scale(const Vector3D& amount) {
 }
 
 void SceneNode::translate(const Vector3D& amount) {
-  // Fill me in
   Matrix4x4 t;
 
   t = Matrix4x4(Vector4D(1, 0, 0, amount[0]), Vector4D(0, 1, 0, amount[1]), Vector4D(0, 0, 1,
@@ -105,9 +104,6 @@ bool SceneNode::intersect(Ray ray, Intersection& intersection, SceneNode*& node,
   
   intersection.NORMAL = m_invtrans.transpose() * intersection.NORMAL;
   
-  if (hit) {
-    //    std::cerr << "intersection: " << node->get_name() << " at " << intersection.NEAR << std::endl;
-  }
   return hit;
 }
 

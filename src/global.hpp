@@ -18,11 +18,12 @@
 #define DOUBLE_MAX std::numeric_limits<double>::max()
 
 #define EPSILON 0.001
-#define EPSILON_TEMP 0.0001
 
+// TODO It might be nice to make this a configurable setting.
 #define UPDATE_INTERVAL 5
 
 // GLOBALS
+// TODO! figure out a better way to share settings, this is pretty dirty.
 #include "settings.hpp"
 extern Settings *settings;
 

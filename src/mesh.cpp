@@ -26,7 +26,8 @@ Mesh::Mesh(const std::vector<Point3D>& verts, const std::vector<std::vector<int>
 }
 
 void Mesh::init_boundary() {
-  // TODO
+  // TODO No idea why I put this TODO with no comment. I'm assuming it has to do
+  // with assigning the axes to variables. Need to check this out.
   int x = 0, y = 1, z = 2;
   
   Point3D min(DOUBLE_MAX, DOUBLE_MAX, DOUBLE_MAX);
@@ -49,13 +50,10 @@ void Mesh::init_boundary() {
   Point3D pos = Point3D((max[x] + min[x]) / 2, (max[y] + min[y]) / 2, (max[z] + min[z]) / 2);
   double radius = std::abs((max - pos).length());
   
-  std::cerr << "bounding sphere: " << pos << ", " << radius << std::endl;
-  
   this->boundary = new NonhierSphere(pos, radius);
 }
 
 bool Mesh::intersect_boundary(const Ray& ray) {
-  // TODO
   Intersection tmp;
   return boundary->intersect(ray, tmp, true);
 }
@@ -68,16 +66,11 @@ bool Mesh::intersect(const Ray& ray, Intersection& intersection, bool quick) {
   if (m_faces.size() > 1 && !intersect_boundary(ray)) {
     return false;
   }
-  //  */
   int i = 0;
   Intersection tmp;
   bool any = false;
   
   for (std::vector<Face>::const_iterator I = m_faces.begin(); I != m_faces.end(); ++I) {
-    //  if (i < 10) { i++; continue; }
-    // if (i > 1) break;
-
-    //    std::cerr << "ray : " << ray.O << " , " << ray.D << std::endl;
     if (intersect_face(ray, (Face) (*I), tmp)) {
       if (quick)
         return true;
@@ -87,8 +80,6 @@ bool Mesh::intersect(const Ray& ray, Intersection& intersection, bool quick) {
         any = true;
         if (has_uv) {
           // TODO calculate UV coordinates
-
-
         }
 
       } else {
@@ -96,9 +87,7 @@ bool Mesh::intersect(const Ray& ray, Intersection& intersection, bool quick) {
         if ((tmp.NEAR - ray.O).length() < (intersection.NEAR - ray.O).length()) {
           intersection = Intersection(tmp);
           if (has_uv) {
-            // calculate UV coordinates
-
-
+            // TODO calculate UV coordinates
           }
         }
       }
@@ -112,13 +101,11 @@ bool Mesh::intersect(const Ray& ray, Intersection& intersection, bool quick) {
   return false;
 }
 
-// DLM
 bool Mesh::intersect_face(const Ray& ray, const Face face, Intersection& intersection) {
   Point3D V0 = m_verts[face[0]], V1 = m_verts[face[1]], V2 = m_verts[face[2]];
   
   // Intersect the plane
   Vector3D N = (V1 - V0).cross(V2 - V1);
-  //  N.normalize();
 
   double N_dot_dir = N.dot(ray.D);
   if (N_dot_dir == 0)
@@ -133,12 +120,8 @@ bool Mesh::intersect_face(const Ray& ray, const Face face, Intersection& interse
   if (t <= EPSILON) {
     return false;
   }
-  // std::cerr << "B " << std::endl;
   intersection.NEAR = ray.O + (t * ray.D);
   intersection.NORMAL = N;
-
-  //  std::cerr << "ray : " << ray.O << " , " << ray.D << std::endl;
-  //  std::cerr << "t : " << t << std::endl;
 
   if ((intersection.NEAR - ray.O).length() < EPSILON)
     return false;
@@ -191,7 +174,6 @@ bool Mesh::intersect_face(const Ray& ray, const Face face, Intersection& interse
     }
   }
 
-  //  std::cerr << "!!! near : " << intersection.NEAR << std::endl;
   return true;
 }
 

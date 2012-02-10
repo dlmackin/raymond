@@ -51,7 +51,8 @@ private:
 
 class RMaterial : public PhongMaterial {
 public:
-  RMaterial(const Colour& kd, const Colour& ks, double shininess, double reflection, double refraction, double refractive_index);
+  RMaterial(const Colour& kd, const Colour& ks, double shininess, double reflection, 
+      double refraction, double refractive_index);
   virtual double get_reflection() { return reflection; }
   virtual double get_refraction() { return refraction; }
   virtual double get_refractive_index() { return refractive_index; }

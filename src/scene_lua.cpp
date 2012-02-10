@@ -621,9 +621,6 @@ extern "C" int gr_node_set_operation_cmd(lua_State* L) {
 
   const char* axis_string = luaL_checkstring(L, 2);
 
-//  luaL_argcheck(L, axis_string && std::strlen(axis_string) == 1, 2, "Single character expected");
-//  char axis = std::tolower(axis_string[0]);
-
   self->set_operation(axis_string);
 
   return 0;

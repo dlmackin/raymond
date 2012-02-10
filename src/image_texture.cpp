@@ -26,7 +26,6 @@ Colour ImageTexture::get_texture_for_point(Point2D uv) {
   double x = u * image.width();
   double y = v * image.height();
 
-//  std::cerr << "elements = " << image.elements() << std::endl;
   double r = image(x,y,0);
   double g = image(x,y,1);
   double b = image(x,y,2);

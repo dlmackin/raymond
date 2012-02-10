@@ -4,6 +4,7 @@
 #include "algebra.hpp"
 
 // Data structure for passing around intersection info.
+// TODO this needs some cleanup
 
 struct Intersection {
   Point3D NEAR;

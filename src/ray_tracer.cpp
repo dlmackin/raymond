@@ -44,7 +44,7 @@ bool RayTracer::run() {
   const double tanx = tan(fov * PI / 180 * 0.5);
   const double tany = tan(fovy * PI / 180 * 0.5);
 
-  // TODO photon map!]
+  // TODO photon map
   if (settings->show_photons) {
     photon_map->build();
     if (settings->direct_map) {
@@ -58,12 +58,7 @@ bool RayTracer::run() {
   // The image to write to
   Image img(width, height, 3);
 
-  /*
-   int miny = 155, maxy = 156, minx = 100, maxx = 101;
-   /*/
   int miny = 0, maxy = height, minx = 0, maxx = width;
-  //*/
-
   int ctr = 0;
 
   next_update = UPDATE_INTERVAL; // When to do the next progress update.
@@ -85,10 +80,6 @@ bool RayTracer::run() {
           if (settings->stochastic) {
             x_sample = x + (i / (double) settings->samples) + (1 / (double) settings->samples) * drand48();
             y_sample = y + (j / (double) settings->samples) + (1 / (double) settings->samples) * drand48();
-//            if (ctr < 7) {
-//            std::cerr << "x = " << x << ", i = " << i << ", sample x = " << x_sample << std::endl;
-//            ctr++;
-//            }
           } else {
             x_sample = x + (i / (double) settings->samples);
             y_sample = y + (j / (double) settings->samples);
@@ -128,7 +119,6 @@ bool RayTracer::run() {
   } // end for (y)
 
   std::cout << std::endl << "Rendering complete!" << std::endl;
-
   std::cout << hits << " hits" << ", " << " (" << rays << " rays)" << std::endl;
 
   // print counters:
@@ -143,6 +133,9 @@ bool RayTracer::run() {
 
 /*
  * Background generator. Returns a colour for the given position in the image.
+ * Currently just a gradient from blue to black.
+ * TODO: Might want to add more interesting ones, or make it user defined
+ * somehow.
  */
 Colour RayTracer::background(double x, double y, int width, int height) {
   return Colour(0, 0, 1 - (double) y / height);
@@ -179,21 +172,10 @@ Colour RayTracer::trace_ray(Ray ray, double x, double y, int depth) {
 
       photon_colour = photon_colour * tmp;
 
-      //      photon_colour = *(closest[0]->colour) * tmp * n;
-
       if (settings->direct_map) {
         return photon_colour;
       }
     }
-
-    //    if (settings->show_photons) {
-    //      Photon *closest = photon_map->get_closest(intersection.NEAR);
-    //      if (std::abs((intersection.NEAR - closest->p).length()) < 20) {
-    //        std::cerr << "wo-hoo!" << std::endl;
-    //        return Colour(1, 1, 1);
-    //      }
-    //      return Colour(0, 0, 0);
-    //    }
 
     intersection.NORMAL.normalize();
     if (depth > 0) {
@@ -225,28 +207,16 @@ Colour RayTracer::trace_ray(Ray ray, double x, double y, int depth) {
       // TODO (maybe) fix the shadow intersection thing for realsies
       if (root->intersect(*shadow_ray, tmp, tmp_node, false) && (tmp.NEAR - shadow_ray->O).length()
           < shadow_ray->D.length()) {
-
-        // TODO this is not cool at all
-
-        //        if (((GeometryNode *) tmp_node)->get_material()->get_refraction() > 0) {
-        //          sample_colour = sample_colour + (node->colour_at(i_copy, &view_dir, (*I))
-        //              * ((GeometryNode *) tmp_node)->get_material()->get_refraction());
-        //          //              * (1 - ((GeometryNode *) tmp_node)->get_material()->get_refraction()));
-        //        } else {
         continue; // skip lights that are blocked
-        //        }
       } else {
         Colour add = node->colour_at(i_copy, &view_dir, (*I));
         if (add.R() != add.R()) {
-          // Something's fucked...
+          // Something's gone terribly wrong
           std::cerr << "something went wrong..." << std::endl;
-
         } else {
           sample_colour = sample_colour + add;
         }
-
       }
-
     }
 
     double reflection = node->get_material()->get_reflection();
@@ -276,10 +246,9 @@ Colour RayTracer::trace_ray(Ray ray, double x, double y, int depth) {
       // generate secondary ray
       Ray secondary_ray;
       secondary_ray.O = Point3D(intersection.NEAR);
-
       Vector3D normal = Vector3D(intersection.NORMAL);
-
       Vector3D incident = Vector3D(ray.D);
+
       normal.normalize();
       incident.normalize();
 
@@ -339,6 +308,10 @@ void RayTracer::show_photons() {
     }
 
     // colour it white
+    // TODO: Obviously this isn't always what we want, it does look right for
+    // completely transparent stuff like water and clear glass. In order to have
+    // photons with proper colours the way materials are defined really needs
+    // some work.
     img(p[0], height - p[1] - 1, 0) = 1;
     img(p[0], height - p[1] - 1, 1) = 1;
     img(p[0], height - p[1] - 1, 2) = 1;

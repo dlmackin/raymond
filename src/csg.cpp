@@ -112,9 +112,6 @@ bool CSGNode::get_difference(Ray ray, Intersection& A, Intersection& B, bool A_h
     if (A_min < B_min) {
       return false;
     } else {
-//      std::cerr << "D" << std::endl;
-//      std::cerr << "A_min: " << A.NEAR << ", B_min: " << B.NEAR << std::endl;
-//      std::cerr << "ray: " << ray.O << std::endl;
       intersection.NEAR = B.NEAR;
       intersection.NORMAL = -B.NORMAL;
       intersection.FAR = A.NEAR;
@@ -177,19 +174,15 @@ bool CSGNode::intersect(Ray ray, Intersection& intersection, SceneNode*& node, b
   ray.transform(m_invtrans);
   ChildList::const_iterator it = m_children.begin();
 
-  //  std::cerr << "0" << std::endl;
   A_hit = (*it)->intersect(ray, A, A_node, quick);
 
-  //  std::cerr << "a" << std::endl;
 
   if (m_children.size() == 1) {
-    //    std::cerr << "b" << std::endl;
     hit = A_hit;
     local_intersection = A;
     local_node = A_node;
 
   } else {
-    //    std::cerr << "bad" << std::endl;
     ++it;
     B_hit = (*it)->intersect(ray, B, B_node, quick);
 
@@ -208,7 +201,6 @@ bool CSGNode::intersect(Ray ray, Intersection& intersection, SceneNode*& node, b
     }
   }
 
-  //  std::cerr << "c" << std::endl;
   if (hit) {
     intersection = local_intersection;
     node = local_node;

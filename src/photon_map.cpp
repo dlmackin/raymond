@@ -10,6 +10,16 @@
 #include "ray.hpp"
 #include "global.hpp"
 
+// TODO Lots of issues with this. A couple of the most obvious things:
+// - Should use kd-tree for nearest neighbours
+// - Some noise in terms of the actual distribution of photons
+// - Building the map is slooooow - picking a completely random direction
+//   results in a ton of useless photons
+// - It only works for one light!
+// - The photons don't pick up material colours.
+// - I'm not sure that the power gets attenuated properly/at all.
+
+
 PhotonMap::PhotonMap(SceneNode *root, const std::list<Light*>& lights, int size) :
   root(root), lights(lights), size(size), stored_photons(0), misses(0) {
   // TODO Auto-generated constructor stub
@@ -49,8 +59,6 @@ void PhotonMap::build() {
       r.D = Vector3D(get_rand(), get_rand(), get_rand()); // random direction
       r.O = (*I)->position; // origin at light
 
-      //      std::cerr << "emitting photon towards " << r.D << std::endl;
-
       int ret = emit_photon(r, (*I), 1);
 
     }
@@ -68,22 +76,16 @@ int PhotonMap::emit_photon(Ray ray, Light* light, int depth) {
   bool hit = root->intersect(ray, intersection, node, false);
 
   if (hit) {
-    if (node->get_name() == "glass sphere") {
-      //      std::cerr << "hit " << node->get_name() << " at " << intersection.NEAR << " (depth " << depth << ")" << std::endl;
-    }
 
     double refraction = ((GeometryNode *) node)->get_material()->get_refraction();
     double reflection = ((GeometryNode *) node)->get_material()->get_reflection();
 
     if (depth > 1 && refraction <= 0 && reflection <= 0) {
-      //      std::cerr << "storing hit " << node->get_name() << " at " << intersection.NEAR << " (depth " << depth << ")" << std::endl;
       // store
       Photon *photon = new Photon();
       photon->d = ray.D;
       photon->p = intersection.NEAR;
       photon->colour = new Colour(0.5, 0.5, 0.5); // TODO
-
-//      photon->colour = &(((GeometryNode *) node)->get_ambient_intensity(intersection) * 0.9);
 
       map[stored_photons] = photon;
       stored_photons++;
@@ -125,7 +127,6 @@ int PhotonMap::emit_photon(Ray ray, Light* light, int depth) {
         double theta = std::acos(cosI / (double) (normal.length() * incident.length()));
 
         if (sinT2 > 1) {
-          //          std::cerr << "TIR: " <<  180 * theta / M_PI << " degrees" << std::endl;
           return stored;
         }
 
@@ -134,6 +135,8 @@ int PhotonMap::emit_photon(Ray ray, Light* light, int depth) {
         stored += emit_photon(next, light, depth + 1);
 
       } else { // REFLECT
+        // TODO Reflection just isn't used right now because the stuff below
+        // didn't work.
 //        Ray next;
 //        next.O = Point3D(intersection.NEAR);
 //        next.D = Vector3D(ray.D + (2 * -(intersection.NORMAL.dot(ray.D)) * intersection.NORMAL));

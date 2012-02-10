@@ -23,6 +23,7 @@ Colour SphereTexture::colour_at(const Intersection& intersection, const Vector3D
   return get_texture_for_point(intersection.uv);
 }
 
+// TODO Add other procedural textures - at least a grid or something.
 Colour SphereTexture::get_texture_for_point(Point2D uv) {
 
   // Procedural texture for horizontal stripes

@@ -41,9 +41,5 @@ Vector3D BumpMaterial::get_normal(const Intersection& intersection) {
   normal[1] = normal[1] + (u * x_gradient) + (v * y_gradient);
   normal[2] = normal[2] + (u * x_gradient) + (v * y_gradient);
 
-  //  x_gradient = pixel(x-1, y) - pixel(x+1, y)
-  //    y_gradient = pixel(x, y-1) - pixel(x, y+1)
-
-
   return normal;
 }

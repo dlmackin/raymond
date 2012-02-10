@@ -12,7 +12,7 @@ Material::~Material() {
 }
 Colour Material::colour_at(const Intersection& intersection, const Vector3D* view,
     const Light *light) {
-  return Colour(1); // TODO placeholder...
+  return Colour(1); // TODO placeholder - should really just be abstract.
 }
 
 PhongMaterial::PhongMaterial(const Colour& kd, const Colour& ks, double shininess) :
@@ -33,7 +33,6 @@ Colour PhongMaterial::colour_at(const Intersection& intersection, const Vector3D
   
   Vector3D normal = get_normal(intersection);
 
-  // TODO !!!!! This just got soooooooooooooo broken!!!!!
   // calculate light direction
   Vector3D light_dir = light->position - intersection.NEAR;
   double dist = light_dir.length();
@@ -49,12 +48,8 @@ Colour PhongMaterial::colour_at(const Intersection& intersection, const Vector3D
   // Diffuse part
   diffuse = Colour(get_kd(intersection) * light_dot_normal);
   
-  //  Vector3D wow(diffuse.R(), diffuse.G(), diffuse.B());
-
   // Specular
   Vector3D r = -light_dir + 2 * (light_dot_normal) * normal;
-  
-//  double x = pow((r.dot(view)), m_shininess);
   
   if (view == NULL || pow((r.dot(*view)), m_shininess) < 0) {
     specular = Colour(0, 0, 0);
