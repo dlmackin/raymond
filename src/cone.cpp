@@ -15,6 +15,9 @@ const Vector3D Cone::CAP_NORMAL = Vector3D(0, -1, 0);
 
 int cflag = 0;
 
+const double Cone::RADIUS;
+const double Cone::HEIGHT;
+
 Cone::Cone() {
   // TODO Auto-generated constructor stub
 

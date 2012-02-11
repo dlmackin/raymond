@@ -269,7 +269,7 @@ bool NonhierBox::intersect(const Ray& ray, Intersection& intersection, bool quic
       continue;
 
     local_intersection = ray.O + (d * ray.D);
-    if ((local_intersection - ray.O).length() < EPSILON_TEMP)
+    if ((local_intersection - ray.O).length() < EPSILON)
       continue;
     
     if (in_box(local_intersection, B1, Bh, i)) {
@@ -305,7 +305,7 @@ bool NonhierBox::intersect(const Ray& ray, Intersection& intersection, bool quic
       continue;
 
     local_intersection = ray.O + (d * ray.D);
-    if ((local_intersection - ray.O).length() < EPSILON_TEMP)
+    if ((local_intersection - ray.O).length() < EPSILON)
       continue;
     
     if (in_box(local_intersection, B1, Bh, i)) {

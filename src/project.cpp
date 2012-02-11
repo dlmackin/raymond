@@ -34,8 +34,9 @@ void project_render(// What to render
   int samples_per_pixel = settings->samples * settings->samples;
   double weight = (1 / (double) samples_per_pixel);
 
-  std::cerr.imbue(std::locale("")); // use thousands separator
-  std::cout.imbue(std::locale("")); // use thousands separator
+  // TODO this causes a crash in OSX...
+  // std::cerr.imbue(std::locale("")); // use thousands separator
+  // std::cout.imbue(std::locale("")); // use thousands separator
 
   std::cerr << "Rendering scene...\n     " << "root: " << root << "\n     " << filename << ", "
       << width << "x" << height << "\n     " << "eye: " << eye << ", " << "direction: " << view
